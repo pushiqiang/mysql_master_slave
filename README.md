@@ -16,7 +16,7 @@ Mysql内建的复制功能是构建大型，高性能应用程序的基础。将
 设置mysql主从配置的优点：
 -----
   解决web应用系统，数据库出现的性能瓶颈，采用数据库集群的方式来实现查询负载；一个系统中数据库的查询操作比更新操作要多得多，通过多台查询服务器将数据库的查询分担到不同的查询服务器上从而提高查询效率。<br>
-  Mysql数据库支持数据库的主从复制功能，使用主数据库进行数据的插入、删除与更新操作，而从数据库则专门用来进行数据查询操作，这样可以将更新操作和 查询操作分担到不同的数据库上，从而提高了查询效率。
+  Mysql数据库支持数据库的主从复制功能，使用主服务器进行数据的插入、删除与更新操作，而从服务器则专门用来进行数据查询操作，这样可以将更新操作和 查询操作分担到不同的数据库上，从而提高了查询效率。
 
 MySql复制的基本过程：
 -----
@@ -27,7 +27,7 @@ MySql复制的基本过程：
   　　4　Slave 的 SQL 线程检测到 Relay Log 中新增加了内容后，会马上解析该 Log 文件中的内容成为在 Master端真实执行时候的那些可执行的 Query 语句，并在自身执行这些 Query。这样，实际上就是在 Master 端和 Slave端执行了同样的 Query，所以两端的数据是完全一样的。<br>
 
 
-我在win7和ubuntu12上面做的测试，版本都是mysql-5.5.46，结果表明跨操作系统也是可以完成数据库主从配置的；主数据库（ubuntu笔记本），从数据库就（win7台式）;从数据库版本一定要高于等于主数据库的版本。
+我在win7和ubuntu12上面做的测试，版本都是mysql-5.5.46，结果表明跨操作系统也是可以完成数据库主从配置的；主服务器（ubuntu笔记本），从服务器就（win7台式）;从服务器版本一定要高于等于主服务器的版本。
 ----------------
 
 ###主服务器(ubuntu)配置
@@ -77,27 +77,29 @@ MySql复制的基本过程：
    mysql>change master to master_host='192.168.1.106',master_user='pushiqiang',master_password='q123',
          master_log_file='mysql-bin.000001',master_log_pos=107;   //注意不要断开，308数字前后无单引号。
 ```
-master_host:主数据库的ip；
+master_host:主服务器的ip；
 master_port:端口号；（如果默认3306的话不需要指定）；
 mstart_user:登陆主服务器mysql用户；
 master_password:登陆主服务器mysql密码；
-master_log_pos:从主数据库复制文件的第几个位置进行复制；即前面记录的master的状态中的File域的值
+master_log_pos:从主服务器复制文件的第几个位置进行复制；即前面记录的master的状态中的File域的值
 master_log_file:主服务器中的数据库复制文件；即前面记录的master的状态中的Position域的值
 
-4启动从服务器复制功能   Mysql>start slave;    
-
+4启动从服务器复制功能   
+```
+   mysql>start slave;    
+```
 5检查从服务器复制功能状态：
 ```
    mysql> show slave status\G；
 	      Slave_IO_Running: Yes    //此状态必须YES
         Slave_SQL_Running: Yes     //此状态必须YES
 ```
-	若Slave_IO_Running: Connecting 则坚持主服务器的3306端口是否允许远程访问，用telnent master 3306 测试
+	若Slave_IO_Running: Connecting 则查看主服务器的3306端口是否允许远程访问，用telnent master 3306 测试
 
 ###允许3306远程访问
 查看3306时候允许远程访问，若只有127.0.0.1:3306 则只允许本地
 netstat -an|grep 3306
 
 将/etc/mysql/my.cnf文件中	bind-address =127.0.0.1注销
-
-
+<br>
+现在你对主服务器的任何更新操作都将同步到从服务器，你可以试试建表，插入数据，删除数据，看是否同步成功(从服务器的更新不会同步到主服务器)。
