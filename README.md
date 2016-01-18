@@ -43,7 +43,8 @@ MySql复制的基本过程：
 
 3在主服务器上建立帐户并授权slave:
    ```
-    grant replication slave on *.* to 'mysync'@'%' identified by 'q123456'; //一般不用root帐号，%为通配符，表示所有客户端都可能连，只要帐号，密码正确，此处可用具体客户端IP代替，如192.168.145.226，加强
+    grant replication slave on *.* to 'pushiqiang'@'%' identified by 'q123';
+    //一般不用root帐号，%为通配符，表示所有客户端都可能连，只要帐号，密码正确，此处可用具体客户端IP代替，如192.168.1.100，加强
 
 安全。
 ```
@@ -73,7 +74,7 @@ MySql复制的基本过程：
 
 3配置从服务器Slave：
 ```
-   mysql>change master to master_host='192.168.145.222',master_user='mysync',master_password='q123456',
+   mysql>change master to master_host='192.168.1.106',master_user='pushiqiang',master_password='q123',
          master_log_file='mysql-bin.000001',master_log_pos=107;   //注意不要断开，308数字前后无单引号。
 ```
 master_host:主数据库的ip；
