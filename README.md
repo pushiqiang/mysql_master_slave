@@ -37,7 +37,7 @@ MySql复制的基本过程：
    #vi /etc/my.cnf       也可能在/etc/mysql/my.cnf
        [mysqld]
        log-bin=mysql-bin   //[必须]启用二进制日志
-       server-id=222      //[必须]服务器唯一ID，默认是1，一般取IP最后一段
+       server-id=111      //[必须]服务器唯一ID，默认是1，一般取IP最后一段
 ```
 2重启mysql	service mysql restart
 
