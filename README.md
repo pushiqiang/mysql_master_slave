@@ -97,7 +97,7 @@ master_log_file:主服务器中的数据库复制文件；即前面记录的mast
 	若Slave_IO_Running: Connecting 则查看主服务器的3306端口是否允许远程访问，用telnent master 3306 测试
 
 ###允许3306远程访问
-查看3306时候允许远程访问，若只有127.0.0.1:3306 则只允许本地
+查看3306是否允许远程访问，若只有127.0.0.1:3306 则只允许本地<br>
 netstat -an|grep 3306
 
 将/etc/mysql/my.cnf文件中	bind-address =127.0.0.1注销
